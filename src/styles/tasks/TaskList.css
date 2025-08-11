@@ -1,0 +1,30 @@
+.task-list {
+  margin-top: 20px;
+}
+
+.task-list-empty {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.empty-state {
+  color: #6c757d;
+}
+
+.empty-state i {
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.empty-state h5 {
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.95rem;
+} 

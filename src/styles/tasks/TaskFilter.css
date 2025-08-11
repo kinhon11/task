@@ -1,0 +1,67 @@
+.task-filter {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.filter-controls {
+  margin-bottom: 20px;
+}
+
+.filter-controls .btn-group {
+  width: 100%;
+}
+
+.filter-controls .btn {
+  flex: 1;
+  padding: 10px 15px;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.filter-controls .btn:not(:last-child) {
+  margin-right: 10px;
+}
+
+.filter-stats {
+  border-top: 1px solid #e1e5e9;
+  padding-top: 20px;
+}
+
+.filter-stats .progress {
+  height: 8px;
+  border-radius: 4px;
+  background-color: #e9ecef;
+  margin-bottom: 10px;
+}
+
+.filter-stats .progress-bar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.filter-stats small {
+  display: block;
+  text-align: center;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .task-filter {
+    padding: 15px;
+  }
+  
+  .filter-controls .btn-group {
+    flex-direction: column;
+  }
+  
+  .filter-controls .btn:not(:last-child) {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+} 
