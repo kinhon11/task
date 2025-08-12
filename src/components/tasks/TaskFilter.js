@@ -1,11 +1,11 @@
-import React from 'react';
-import '../../styles/tasks/TaskFilter.css';
+import React from "react";
+import "../../styles/tasks/TaskFilter.css";
 
 class TaskFilter extends React.Component {
   state = {
-    filter: 'all',
-    totalTasks: 0,
-    completedTasks: 0
+    filter: "all",
+    totalTasks: "",
+    completedTasks: "",
   };
 
   componentDidMount() {
@@ -21,18 +21,17 @@ class TaskFilter extends React.Component {
   loadTaskStats = () => {
     const { tasks } = this.props;
     const totalTasks = tasks.length;
-    const completedTasks = tasks.filter(task => task.completed).length;
-    
+    const completedTasks = tasks.filter((task) => task.completed).length;
+
     this.setState({
       totalTasks,
-      completedTasks
+      completedTasks,
     });
   };
 
   handleFilterChange = (newFilter) => {
     this.setState({ filter: newFilter });
-    
-    // Notify parent about filter change
+
     if (this.props.onFilterChange) {
       this.props.onFilterChange(newFilter);
     }
@@ -47,27 +46,33 @@ class TaskFilter extends React.Component {
           <div className="btn-group" role="group">
             <button
               type="button"
-              className={`btn ${filter === 'all' ? 'btn-primary' : 'btn-outline-primary'}`}
-              onClick={() => this.handleFilterChange('all')}
+              className={`btn ${
+                filter === "all" ? "btn-primary" : "btn-outline-primary"
+              }`}
+              onClick={() => this.handleFilterChange("all")}
             >
               <i className="fas fa-list me-1"></i>
-              Tất cả ({totalTasks})
+              All ({totalTasks})
             </button>
             <button
               type="button"
-              className={`btn ${filter === 'active' ? 'btn-primary' : 'btn-outline-primary'}`}
-              onClick={() => this.handleFilterChange('active')}
+              className={`btn ${
+                filter === "active" ? "btn-primary" : "btn-outline-primary"
+              }`}
+              onClick={() => this.handleFilterChange("active")}
             >
               <i className="fas fa-clock me-1"></i>
-              Đang làm ({totalTasks - completedTasks})
+              Active ({totalTasks - completedTasks})
             </button>
             <button
               type="button"
-              className={`btn ${filter === 'completed' ? 'btn-primary' : 'btn-outline-primary'}`}
-              onClick={() => this.handleFilterChange('completed')}
+              className={`btn ${
+                filter === "completed" ? "btn-primary" : "btn-outline-primary"
+              }`}
+              onClick={() => this.handleFilterChange("completed")}
             >
               <i className="fas fa-check me-1"></i>
-              Hoàn thành ({completedTasks})
+              Completed ({completedTasks})
             </button>
           </div>
         </div>
@@ -78,17 +83,22 @@ class TaskFilter extends React.Component {
               className="progress-bar"
               role="progressbar"
               style={{
-                width: `${totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0}%`
+                width: `${
+                  totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0
+                }%`,
               }}
               aria-valuenow={completedTasks}
               aria-valuemin="0"
               aria-valuemax={totalTasks}
             >
-              {totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0}%
+              {totalTasks > 0
+                ? Math.round((completedTasks / totalTasks) * 100)
+                : 0}
+              %
             </div>
           </div>
           <small className="text-muted">
-            Tiến độ hoàn thành: {completedTasks}/{totalTasks}
+            Completion progress: {completedTasks}/{totalTasks}
           </small>
         </div>
       </div>
@@ -96,4 +106,4 @@ class TaskFilter extends React.Component {
   }
 }
 
-export default TaskFilter; 
+export default TaskFilter;

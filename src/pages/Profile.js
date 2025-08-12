@@ -1,41 +1,70 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { getCurrentUser, removeCurrentUser } from '../utils/storage';
-import '../styles/Profile.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import { getCurrentUser, removeCurrentUser } from "../utils/storage";
+import "../styles/Profile.css";
 
 class Profile extends React.Component {
   state = {
     user: null,
-    isLoggedIn: false
+    isLoggedIn: false,
+    totalTasks: 0,
+    completedTasks: 0,
+    inProgressTasks: 0,
+    overdueTasks: 0,
   };
 
   componentDidMount() {
     this.loadUserData();
+    this.focusListener = () => this.loadTaskStats();
+    window.addEventListener('focus', this.focusListener);
+  }
+
+  componentWillUnmount() {
+    if (this.focusListener) window.removeEventListener('focus', this.focusListener);
   }
 
   loadUserData = () => {
     const user = getCurrentUser();
     if (user) {
-      this.setState({ 
+      this.setState({
         user,
-        isLoggedIn: true 
-      });
+        isLoggedIn: true,
+      }, this.loadTaskStats);
     } else {
-      window.location.href = '/login';
+      window.location.href = "/login";
     }
-  }
+  };
+
+  loadTaskStats = () => {
+    const { user } = this.state;
+    if (!user) return;
+    const tasks = JSON.parse(localStorage.getItem(`tasks_${user.id}`)) || [];
+
+    const totalTasks = tasks.length;
+    const completedTasks = tasks.filter(t => t.completed).length;
+    const inProgressTasks = tasks.filter(t => !t.completed).length;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const overdueTasks = tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < today).length;
+
+    this.setState({ totalTasks, completedTasks, inProgressTasks, overdueTasks });
+  };
 
   handleLogout = () => {
     removeCurrentUser();
-    this.setState({ 
-      user: null, 
-      isLoggedIn: false 
+    this.setState({
+      user: null,
+      isLoggedIn: false,
+      totalTasks: 0,
+      completedTasks: 0,
+      inProgressTasks: 0,
+      overdueTasks: 0,
     });
-    window.location.href = '/login';
-  }
+    window.location.href = "/login";
+  };
 
   render() {
-    const { user, isLoggedIn } = this.state;
+    const { user, isLoggedIn, totalTasks, completedTasks, inProgressTasks, overdueTasks } = this.state;
 
     if (!isLoggedIn || !user) {
       return (
@@ -48,7 +77,9 @@ class Profile extends React.Component {
     }
 
     const joinDate = new Date(user.createdAt);
-    const daysSinceJoin = Math.floor((new Date() - joinDate) / (1000 * 60 * 60 * 24));
+    const daysSinceJoin = Math.floor(
+      (new Date() - joinDate) / (1000 * 60 * 60 * 24)
+    );
 
     return (
       <div className="profile-container">
@@ -60,7 +91,8 @@ class Profile extends React.Component {
             <h1 className="profile-name">{user.name}</h1>
             <p className="profile-email">{user.email}</p>
             <p className="profile-join-date">
-              Tham gia từ {joinDate.toLocaleDateString('vi-VN')} ({daysSinceJoin} ngày trước)
+              Joined on {joinDate.toLocaleDateString("en-US")} ({daysSinceJoin}{" "}
+              days ago)
             </p>
           </div>
         </div>
@@ -72,7 +104,7 @@ class Profile extends React.Component {
                 <div className="profile-card">
                   <div className="card-header">
                     <i className="fas fa-info-circle"></i>
-                    <h5>Thông tin cá nhân</h5>
+                    <h5>Personal information</h5>
                   </div>
                   <div className="card-body">
                     <div className="profile-info-item">
@@ -80,7 +112,7 @@ class Profile extends React.Component {
                         <i className="fas fa-user"></i>
                       </div>
                       <div className="profile-info-content">
-                        <div className="profile-info-label">Họ và tên</div>
+                        <div className="profile-info-label">Full name</div>
                         <div className="profile-info-value">{user.name}</div>
                       </div>
                     </div>
@@ -100,12 +132,12 @@ class Profile extends React.Component {
                         <i className="fas fa-calendar"></i>
                       </div>
                       <div className="profile-info-content">
-                        <div className="profile-info-label">Ngày tham gia</div>
+                        <div className="profile-info-label">Join date</div>
                         <div className="profile-info-value">
-                          {joinDate.toLocaleDateString('vi-VN', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
+                          {joinDate.toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
                           })}
                         </div>
                       </div>
@@ -116,10 +148,8 @@ class Profile extends React.Component {
                         <i className="fas fa-clock"></i>
                       </div>
                       <div className="profile-info-content">
-                        <div className="profile-info-label">Thời gian sử dụng</div>
-                        <div className="profile-info-value">
-                          {daysSinceJoin} ngày
-                        </div>
+                        <div className="profile-info-label">Usage time</div>
+                        <div className="profile-info-value">{daysSinceJoin} days</div>
                       </div>
                     </div>
                   </div>
@@ -134,8 +164,8 @@ class Profile extends React.Component {
                         <div className="profile-stat-icon">
                           <i className="fas fa-tasks"></i>
                         </div>
-                        <div className="profile-stat-number">0</div>
-                        <div className="profile-stat-label">Tổng công việc</div>
+                        <div className="profile-stat-number">{totalTasks}</div>
+                        <div className="profile-stat-label">Total tasks</div>
                       </div>
                     </div>
                     <div className="col-6">
@@ -143,8 +173,8 @@ class Profile extends React.Component {
                         <div className="profile-stat-icon">
                           <i className="fas fa-check-circle"></i>
                         </div>
-                        <div className="profile-stat-number">0</div>
-                        <div className="profile-stat-label">Đã hoàn thành</div>
+                        <div className="profile-stat-number">{completedTasks}</div>
+                        <div className="profile-stat-label">Completed</div>
                       </div>
                     </div>
                   </div>
@@ -154,8 +184,8 @@ class Profile extends React.Component {
                         <div className="profile-stat-icon">
                           <i className="fas fa-clock"></i>
                         </div>
-                        <div className="profile-stat-number">0</div>
-                        <div className="profile-stat-label">Đang thực hiện</div>
+                        <div className="profile-stat-number">{inProgressTasks}</div>
+                        <div className="profile-stat-label">In progress</div>
                       </div>
                     </div>
                     <div className="col-6">
@@ -163,8 +193,8 @@ class Profile extends React.Component {
                         <div className="profile-stat-icon">
                           <i className="fas fa-exclamation-triangle"></i>
                         </div>
-                        <div className="profile-stat-number">0</div>
-                        <div className="profile-stat-label">Quá hạn</div>
+                        <div className="profile-stat-number">{overdueTasks}</div>
+                        <div className="profile-stat-label">Overdue</div>
                       </div>
                     </div>
                   </div>
@@ -177,16 +207,16 @@ class Profile extends React.Component {
                 <div className="col-md-6">
                   <Link to="/" className="btn btn-outline-primary w-100 mb-2">
                     <i className="fas fa-home me-2"></i>
-                    Về trang chủ
+                    Go to home
                   </Link>
                 </div>
                 <div className="col-md-6">
-                  <button 
+                  <button
                     className="btn btn-danger w-100 mb-2"
                     onClick={this.handleLogout}
                   >
                     <i className="fas fa-sign-out-alt me-2"></i>
-                    Đăng xuất
+                    Logout
                   </button>
                 </div>
               </div>
@@ -198,4 +228,4 @@ class Profile extends React.Component {
   }
 }
 
-export default Profile; 
+export default Profile;

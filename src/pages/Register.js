@@ -21,17 +21,17 @@ class Register extends React.Component {
           <div className="card-header">
             <h2>
               <i className="fas fa-user-plus me-2"></i>
-              Đăng ký
+              Register
             </h2>
-            <p>Tạo tài khoản mới để bắt đầu quản lý công việc của bạn.</p>
+            <p>Create a new account to start managing your tasks.</p>
           </div>
           
           <RegisterForm onSubmit={this.handleSubmit} />
 
           <div className="register-links">
             <p>
-              Đã có tài khoản?{' '}
-              <Link to="/login">Đăng nhập ngay</Link>
+              Already have an account?{' '}
+              <Link to="/login">Login now</Link>
             </p>
           </div>
         </div>

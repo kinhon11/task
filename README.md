@@ -1,224 +1,295 @@
 # Personal Task Manager
 
-Ứng dụng quản lý công việc cá nhân được xây dựng bằng ReactJS với các tính năng đầy đủ cho việc quản lý task hàng ngày.
+A comprehensive personal task management application built with ReactJS, featuring user authentication, task management, and modern UI/UX design.
 
-## 🚀 Tính năng
+## 🚀 Features
 
-### 🔐 Xác thực người dùng
-- **Đăng ký tài khoản**: Tạo tài khoản mới với email và mật khẩu
-- **Đăng nhập**: Xác thực người dùng với thông tin đã đăng ký
-- **Đăng xuất**: Thoát khỏi phiên làm việc hiện tại
-- **Bảo vệ route**: Chỉ người dùng đã đăng nhập mới có thể truy cập các trang được bảo vệ
+### 🔐 User Authentication
+- **User Registration**: Create new accounts with email and password
+- **User Login**: Authenticate users with registered credentials
+- **Logout**: Secure session termination
+- **Protected Routes**: Only authenticated users can access protected pages
 
-### 📋 Quản lý công việc
-- **Thêm công việc mới**: Tạo task với tiêu đề, mô tả và ngày hết hạn
-- **Chỉnh sửa công việc**: Cập nhật thông tin của task đã có
-- **Xóa công việc**: Loại bỏ task không cần thiết với xác nhận
-- **Đánh dấu hoàn thành**: Toggle trạng thái hoàn thành/chưa hoàn thành
-- **Hiển thị trạng thái**: Phân biệt task hoàn thành, chưa hoàn thành, quá hạn
+### 📋 Task Management
+- **Add New Tasks**: Create tasks with title, description, priority, and due date
+- **Edit Tasks**: Update existing task information
+- **Delete Tasks**: Remove unnecessary tasks with confirmation
+- **Mark Complete**: Toggle task completion status
+- **Status Display**: Distinguish between completed, pending, and overdue tasks
 
-### 🔍 Tìm kiếm và lọc
-- **Tìm kiếm theo từ khóa**: Tìm task theo tiêu đề hoặc mô tả
-- **Lọc theo trạng thái**: Hiển thị tất cả, đã hoàn thành, hoặc chưa hoàn thành
-- **Sắp xếp thông minh**: Hiển thị task quá hạn và task hôm nay với badge đặc biệt
+### 🔍 Search and Filter
+- **Keyword Search**: Find tasks by title or description
+- **Status Filtering**: Display all, completed, or pending tasks
+- **Smart Sorting**: Highlight overdue and today's tasks with special badges
 
-### 👤 Quản lý hồ sơ
-- **Xem thông tin cá nhân**: Hiển thị thông tin người dùng
-- **Thống kê tham gia**: Ngày tham gia và thời gian sử dụng
+### 👤 Profile Management
+- **Personal Information**: Display user profile details
+- **Usage Statistics**: Join date and usage time tracking
 
-## 🛠️ Công nghệ sử dụng
+## 🛠️ Technologies Used
 
-- **ReactJS 18**: Framework chính với Class Components
-- **React Router DOM**: Quản lý routing và navigation
-- **Bootstrap 5**: CSS Framework cho UI responsive
+- **ReactJS 18**: Main framework with Class Components
+- **React Router DOM**: Routing and navigation management
+- **Bootstrap 5**: Responsive CSS framework
 - **Font Awesome**: Icon library
-- **localStorage**: Lưu trữ dữ liệu người dùng và task
+- **localStorage**: Client-side data storage for users and tasks
 
-## 📁 Cấu trúc dự án
+## 📁 Project Structure
 
 ```
 src/
-├── components/           # Các component UI
-│   ├── Navbar.js        # Navigation bar
-│   ├── TaskList.js      # Danh sách và quản lý task
-│   ├── TaskItem.js      # Component hiển thị từng task
-│   ├── TaskForm.js      # Form thêm/sửa task
-│   └── TaskFilter.js    # Bộ lọc và tìm kiếm
-├── pages/               # Các trang chính
-│   ├── Home.js          # Trang chủ - quản lý task
-│   ├── Login.js         # Trang đăng nhập
-│   ├── Register.js      # Trang đăng ký
-│   └── Profile.js       # Trang hồ sơ cá nhân
-├── router/              # Quản lý routing
-│   └── AppRoutes.js     # Định nghĩa routes và bảo vệ
-├── utils/               # Tiện ích và logic
-│   └── storage.js       # Quản lý localStorage
+├── components/           # UI Components
+│   ├── common/          # Reusable components
+│   │   ├── Alert.js     # Alert notifications
+│   │   ├── Button.js    # Custom button component
+│   │   └── FormField.js # Form field wrapper
+│   ├── login/           # Login components
+│   │   ├── LoginFields.js
+│   │   └── LoginForm.js
+│   ├── register/        # Registration components
+│   │   ├── RegisterFields.js
+│   │   └── RegisterForm.js
+│   ├── tasks/           # Task management components
+│   │   ├── TaskList.js  # Task list and management
+│   │   ├── TaskItem.js  # Individual task display
+│   │   ├── TaskForm.js  # Add/edit task form
+│   │   └── TaskFilter.js # Search and filter
+│   └── Navbar.js        # Navigation bar
+├── pages/               # Main pages
+│   ├── Home.js          # Main dashboard - task management
+│   ├── Login.js         # Login page
+│   ├── Register.js      # Registration page
+│   └── Profile.js       # User profile page
+├── router/              # Routing management
+│   └── AppRoutes.js     # Route definitions and protection
+├── services/            # Business logic services
+│   └── authService.js   # Authentication service
+├── utils/               # Utilities and helpers
+│   └── storage.js       # localStorage management
 ├── styles/              # CSS files
-│   ├── components.css   # Styles chung cho components
-│   ├── TaskList.css     # Styles cho TaskList
-│   ├── TaskForm.css     # Styles cho TaskForm
-│   ├── TaskItem.css     # Styles cho TaskItem
-│   └── TaskFilter.css   # Styles cho TaskFilter
-└── App.js               # Component chính
+│   ├── auth/            # Authentication styles
+│   │   ├── Login.css
+│   │   └── Register.css
+│   ├── tasks/           # Task component styles
+│   │   ├── TaskList.css
+│   │   ├── TaskForm.css
+│   │   ├── TaskItem.css
+│   │   └── TaskFilter.css
+│   ├── components.css   # Common component styles
+│   ├── Home.css         # Home page styles
+│   └── Profile.css      # Profile page styles
+├── App.js               # Main application component
+├── App.css              # App-level styles
+├── index.js             # Application entry point
+└── index.css            # Global styles
 ```
 
-## 🎨 Thiết kế UI/UX
+## 🎨 UI/UX Design
 
-### 🎯 Nguyên tắc thiết kế
-- **Responsive Design**: Tương thích với mọi thiết bị
-- **Modern UI**: Giao diện hiện đại với Bootstrap 5
-- **Smooth Animations**: Hiệu ứng mượt mà và chuyên nghiệp
-- **Intuitive UX**: Trải nghiệm người dùng trực quan
+### 🎯 Design Principles
+- **Responsive Design**: Compatible with all devices
+- **Modern UI**: Contemporary interface with Bootstrap 5
+- **Smooth Animations**: Professional and fluid effects
+- **Intuitive UX**: User-friendly experience
 
-### 🎨 Component Styles
-- **TaskList**: Hiển thị danh sách task với animation fadeIn
-- **TaskForm**: Form thêm/sửa với validation và feedback
-- **TaskItem**: Card hiển thị task với hover effects
-- **TaskFilter**: Bộ lọc với focus animations
+### 🎨 Component Styling
+- **TaskList**: Task list display with fadeIn animations
+- **TaskForm**: Add/edit forms with validation and feedback
+- **TaskItem**: Task cards with hover effects
+- **TaskFilter**: Filter components with focus animations
 
-## 🚀 Cài đặt và chạy
+## 🚀 Installation and Setup
 
-### Yêu cầu hệ thống
-- Node.js (version 14 trở lên)
-- npm hoặc yarn
+### System Requirements
+- Node.js (version 14 or higher)
+- npm or yarn package manager
 
-### Các bước cài đặt
+### Installation Steps
 
-1. **Clone repository**
+1. **Clone the repository**
 ```bash
 git clone <repository-url>
 cd personal-task-manager
 ```
 
-2. **Cài đặt dependencies**
+2. **Install dependencies**
 ```bash
 npm install
 ```
 
-3. **Chạy ứng dụng**
+3. **Start the development server**
 ```bash
 npm start
 ```
 
-4. **Truy cập ứng dụng**
-Mở trình duyệt và truy cập: `http://localhost:3000`
+4. **Access the application**
+Open your browser and navigate to: `http://localhost:3000`
 
-## 📖 Hướng dẫn sử dụng
+### Alternative Port (if 3000 is busy)
+If port 3000 is already in use, the application will automatically suggest using another port (usually 3001).
 
-### Đăng ký tài khoản
-1. Truy cập trang đăng ký
-2. Điền đầy đủ thông tin: Họ tên, Email, Mật khẩu
-3. Xác nhận mật khẩu
-4. Nhấn "Đăng ký"
+## 📖 User Guide
 
-### Đăng nhập
-1. Truy cập trang đăng nhập
-2. Nhập Email và Mật khẩu đã đăng ký
-3. Nhấn "Đăng nhập"
+### Registration
+1. Navigate to the registration page
+2. Fill in all required information: Full Name, Email, Password
+3. Confirm your password
+4. Select your gender
+5. Accept the terms and conditions
+6. Click "Register"
 
-### Quản lý công việc
-1. **Thêm task mới**: Nhấn "Thêm công việc mới"
-2. **Chỉnh sửa**: Nhấn icon edit trên task
-3. **Xóa task**: Nhấn icon delete và xác nhận
-4. **Đánh dấu hoàn thành**: Nhấn nút tròn bên trái task
-5. **Tìm kiếm**: Sử dụng ô tìm kiếm
-6. **Lọc**: Chọn trạng thái trong dropdown
+### Login
+1. Navigate to the login page
+2. Enter your registered Email and Password
+3. Click "Login"
 
-## 💾 Lưu trữ dữ liệu
+### Task Management
+1. **Add New Task**: Click "Add a new task..." and fill in the details
+2. **Edit Task**: Click the edit icon on any task
+3. **Delete Task**: Click the delete icon and confirm
+4. **Mark Complete**: Click the checkbox on the left of any task
+5. **Search**: Use the search box to find specific tasks
+6. **Filter**: Select status from the dropdown menu
+
+## 💾 Data Storage
 
 ### localStorage Structure
 ```javascript
-// Users
+// Users array
 'users': [
   {
     id: number,
     name: string,
     email: string,
     password: string,
+    gender: string,
     createdAt: string
   }
 ]
 
-// Current User
+// Current logged-in user
 'currentUser': {
   id: number,
   name: string,
   email: string,
   password: string,
+  gender: string,
   createdAt: string
 }
 
-// Tasks per user
+// Tasks for each user
 'tasks_${userId}': [
   {
     id: number,
     title: string,
     description: string,
+    priority: string,
     dueDate: string,
     completed: boolean,
-    userId: number,
-    createdAt: string
+    createdAt: string,
+    updatedAt: string
   }
 ]
 ```
 
-## 🔧 Tính năng nổi bật
+## 🔧 Key Features
 
-### ✅ Validation đầy đủ
-- Kiểm tra email hợp lệ
-- Mật khẩu tối thiểu 6 ký tự
-- Xác nhận mật khẩu khớp
-- Validation form task
+### ✅ Comprehensive Validation
+- Email format validation
+- Password minimum 6 characters
+- Password confirmation matching
+- Task form validation
 
-### 🎨 UI/UX chuyên nghiệp
-- Loading states với spinner
-- Error handling với alert
-- Success feedback
-- Smooth transitions
+### 🎨 Professional UI/UX
+- Loading states with spinners
+- Error handling with alerts
+- Success feedback messages
+- Smooth transitions and animations
 
 ### 📱 Responsive Design
 - Mobile-first approach
-- Tablet và desktop optimized
+- Tablet and desktop optimized
 - Touch-friendly interactions
 
-### 🔒 Bảo mật
+### 🔒 Security Features
 - Protected routes
 - Session management
-- Data validation
+- Data validation and sanitization
 
-## 🚀 Mở rộng trong tương lai
+## 🚀 Future Enhancements
 
-### 📊 Tính năng có thể thêm
-- **Thống kê**: Biểu đồ hoàn thành task
-- **Categories**: Phân loại task theo danh mục
-- **Priority levels**: Mức độ ưu tiên
-- **Reminders**: Nhắc nhở deadline
-- **Export/Import**: Xuất/nhập dữ liệu
-- **Dark mode**: Chế độ tối
-- **Offline support**: Hoạt động offline
-- **Real-time sync**: Đồng bộ real-time
+### 📊 Potential Features
+- **Statistics Dashboard**: Task completion charts and analytics
+- **Task Categories**: Organize tasks by categories
+- **Priority Levels**: High, medium, low priority management
+- **Reminders**: Deadline notifications and alerts
+- **Export/Import**: Data backup and restore functionality
+- **Dark Mode**: Light/dark theme toggle
+- **Offline Support**: PWA capabilities for offline usage
+- **Real-time Sync**: Multi-device synchronization
 
-### 🔧 Cải tiến kỹ thuật
-- **Backend API**: Kết nối với server
-- **Database**: PostgreSQL/MongoDB
-- **Authentication**: JWT tokens
-- **State Management**: Redux/Context API
-- **Testing**: Unit tests và E2E tests
-- **PWA**: Progressive Web App
+### 🔧 Technical Improvements
+- **Backend API**: Server-side implementation
+- **Database**: PostgreSQL/MongoDB integration
+- **Authentication**: JWT token-based auth
+- **State Management**: Redux or Context API
+- **Testing**: Unit tests and E2E testing
+- **PWA**: Progressive Web App features
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Port 3000 already in use**
+   - Solution: Choose 'Y' when prompted to use another port
+   - Or manually kill the process: `npx kill-port 3000`
+
+2. **Dependencies installation fails**
+   - Solution: Clear npm cache: `npm cache clean --force`
+   - Then reinstall: `npm install`
+
+3. **Application not loading**
+   - Check if Node.js version is 14 or higher
+   - Ensure all dependencies are installed
+   - Check browser console for errors
+
+### Development Commands
+
+```bash
+# Start development server
+npm start
+
+# Build for production
+npm run build
+
+# Run tests
+npm test
+
+# Eject from Create React App (not recommended)
+npm run eject
+```
 
 ## 📄 License
 
-MIT License - Xem file [LICENSE](LICENSE) để biết thêm chi tiết.
+MIT License - See [LICENSE](LICENSE) file for details.
 
-## 👥 Đóng góp
+## 👥 Contributing
 
-Mọi đóng góp đều được chào đón! Vui lòng:
-1. Fork project
-2. Tạo feature branch
-3. Commit changes
-4. Push to branch
-5. Tạo Pull Request
+Contributions are welcome! Please:
+1. Fork the project
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## 🤝 Support
+
+If you encounter any issues or have questions:
+1. Check the troubleshooting section above
+2. Review the browser console for error messages
+3. Ensure all dependencies are properly installed
+4. Verify Node.js version compatibility
 
 ---
 
-**Personal Task Manager** - Quản lý công việc cá nhân một cách hiệu quả! 🚀
+**Personal Task Manager** - Efficient personal task management made simple! 🚀

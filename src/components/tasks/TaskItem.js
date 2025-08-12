@@ -1,5 +1,5 @@
-import React from 'react';
-import '../../styles/tasks/TaskItem.css';
+import React from "react";
+import "../../styles/tasks/TaskItem.css";
 
 class TaskItem extends React.Component {
   state = {
@@ -7,7 +7,7 @@ class TaskItem extends React.Component {
     editTitle: this.props.task.title,
     editDescription: this.props.task.description,
     editPriority: this.props.task.priority,
-    editDueDate: this.props.task.dueDate
+    editDueDate: this.props.task.dueDate,
   };
 
   handleEdit = () => {
@@ -16,7 +16,8 @@ class TaskItem extends React.Component {
 
   handleSave = () => {
     const { task } = this.props;
-    const { editTitle, editDescription, editPriority, editDueDate } = this.state;
+    const { editTitle, editDescription, editPriority, editDueDate } =
+      this.state;
 
     if (editTitle.trim()) {
       const updatedTask = {
@@ -25,10 +26,9 @@ class TaskItem extends React.Component {
         description: editDescription.trim(),
         priority: editPriority,
         dueDate: editDueDate,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
 
-      // Update task in storage
       this.updateTaskInStorage(updatedTask);
       this.setState({ isEditing: false });
     }
@@ -40,12 +40,12 @@ class TaskItem extends React.Component {
       editTitle: this.props.task.title,
       editDescription: this.props.task.description,
       editPriority: this.props.task.priority,
-      editDueDate: this.props.task.dueDate
+      editDueDate: this.props.task.dueDate,
     });
   };
 
   handleDelete = () => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa công việc này?')) {
+    if (window.confirm("Are you sure you want to delete this task?")) {
       this.deleteTaskFromStorage();
     }
   };
@@ -55,8 +55,9 @@ class TaskItem extends React.Component {
     const updatedTask = {
       ...task,
       completed: !task.completed,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
+
     this.updateTaskInStorage(updatedTask);
   };
 
@@ -66,71 +67,88 @@ class TaskItem extends React.Component {
 
   updateTaskInStorage = (updatedTask) => {
     const { task } = this.props;
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    
-    if (currentUser) {
-      const tasks = JSON.parse(localStorage.getItem(`tasks_${currentUser.id}`)) || [];
-      const updatedTasks = tasks.map(t => t.id === task.id ? updatedTask : t);
-      localStorage.setItem(`tasks_${currentUser.id}`, JSON.stringify(updatedTasks));
-      
-      // Notify parent to refresh
-      if (this.props.onUpdate) {
-        this.props.onUpdate();
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (currentUser && currentUser.id) {
+      try {
+        const userId = parseInt(currentUser.id);
+        const tasks = JSON.parse(localStorage.getItem(`tasks_${userId}`)) || [];
+        const updatedTasks = tasks.map((t) =>
+          t.id === task.id ? updatedTask : t
+        );
+        localStorage.setItem(`tasks_${userId}`, JSON.stringify(updatedTasks));
+
+        if (this.props.onUpdate) {
+          this.props.onUpdate();
+        }
+      } catch (error) {
+        console.error("Error updating task in storage:", error);
       }
+    } else {
+      console.error("No current user found");
     }
   };
 
   deleteTaskFromStorage = () => {
     const { task } = this.props;
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    
-    if (currentUser) {
-      const tasks = JSON.parse(localStorage.getItem(`tasks_${currentUser.id}`)) || [];
-      const updatedTasks = tasks.filter(t => t.id !== task.id);
-      localStorage.setItem(`tasks_${currentUser.id}`, JSON.stringify(updatedTasks));
-      
-      // Notify parent to refresh
-      if (this.props.onUpdate) {
-        this.props.onUpdate();
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (currentUser && currentUser.id) {
+      try {
+        // Ensure user.id is a number
+        const userId = parseInt(currentUser.id);
+        const tasks = JSON.parse(localStorage.getItem(`tasks_${userId}`)) || [];
+        const updatedTasks = tasks.filter((t) => t.id !== task.id);
+        localStorage.setItem(`tasks_${userId}`, JSON.stringify(updatedTasks));
+
+        // Notify parent to refresh
+        if (this.props.onUpdate) {
+          this.props.onUpdate();
+        }
+      } catch (error) {
+        console.error("Error deleting task from storage:", error);
       }
+    } else {
+      console.error("No current user found");
     }
   };
 
   getPriorityClass = (priority) => {
     switch (priority) {
-      case 'high':
-        return 'priority-high';
-      case 'medium':
-        return 'priority-medium';
-      case 'low':
-        return 'priority-low';
+      case "high":
+        return "priority-high";
+      case "medium":
+        return "priority-medium";
+      case "low":
+        return "priority-low";
       default:
-        return '';
+        return "";
     }
   };
 
   getPriorityLabel = (priority) => {
     switch (priority) {
-      case 'high':
-        return 'Cao';
-      case 'medium':
-        return 'Trung bình';
-      case 'low':
-        return 'Thấp';
+      case "high":
+        return "High";
+      case "medium":
+        return "Medium";
+      case "low":
+        return "Low";
       default:
-        return 'Không xác định';
+        return "Unknown";
     }
   };
 
   formatDate = (dateString) => {
-    if (!dateString) return '';
+    if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toLocaleDateString('vi-VN');
+    return date.toLocaleDateString("en-US");
   };
 
   render() {
     const { task } = this.props;
-    const { isEditing, editTitle, editDescription, editPriority, editDueDate } = this.state;
+    const { isEditing, editTitle, editDescription, editPriority, editDueDate } =
+      this.state;
 
     if (isEditing) {
       return (
@@ -141,16 +159,20 @@ class TaskItem extends React.Component {
                 type="text"
                 className="form-control"
                 value={editTitle}
-                onChange={(e) => this.handleInputChange('editTitle', e.target.value)}
-                placeholder="Tiêu đề công việc"
+                onChange={(e) =>
+                  this.handleInputChange("editTitle", e.target.value)
+                }
+                placeholder="Task title"
               />
             </div>
             <div className="mb-3">
               <textarea
                 className="form-control"
                 value={editDescription}
-                onChange={(e) => this.handleInputChange('editDescription', e.target.value)}
-                placeholder="Mô tả công việc"
+                onChange={(e) =>
+                  this.handleInputChange("editDescription", e.target.value)
+                }
+                placeholder="Task description"
                 rows="3"
               />
             </div>
@@ -159,11 +181,13 @@ class TaskItem extends React.Component {
                 <select
                   className="form-control"
                   value={editPriority}
-                  onChange={(e) => this.handleInputChange('editPriority', e.target.value)}
+                  onChange={(e) =>
+                    this.handleInputChange("editPriority", e.target.value)
+                  }
                 >
-                  <option value="low">Thấp</option>
-                  <option value="medium">Trung bình</option>
-                  <option value="high">Cao</option>
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
                 </select>
               </div>
               <div className="col-md-6">
@@ -171,7 +195,9 @@ class TaskItem extends React.Component {
                   type="date"
                   className="form-control"
                   value={editDueDate}
-                  onChange={(e) => this.handleInputChange('editDueDate', e.target.value)}
+                  onChange={(e) =>
+                    this.handleInputChange("editDueDate", e.target.value)
+                  }
                 />
               </div>
             </div>
@@ -181,14 +207,14 @@ class TaskItem extends React.Component {
                 onClick={this.handleSave}
               >
                 <i className="fas fa-save me-1"></i>
-                Lưu
+                Save
               </button>
               <button
                 className="btn btn-secondary btn-sm"
                 onClick={this.handleCancel}
               >
                 <i className="fas fa-times me-1"></i>
-                Hủy
+                Cancel
               </button>
             </div>
           </div>
@@ -197,7 +223,11 @@ class TaskItem extends React.Component {
     }
 
     return (
-      <div className={`task-item ${task.completed ? 'completed' : ''} ${this.getPriorityClass(task.priority)}`}>
+      <div
+        className={`task-item ${
+          task.completed ? "completed" : ""
+        } ${this.getPriorityClass(task.priority)}`}
+      >
         <div className="task-content">
           <div className="task-header">
             <div className="task-title-section">
@@ -209,7 +239,11 @@ class TaskItem extends React.Component {
                   onChange={this.handleToggle}
                 />
               </div>
-              <h5 className={`task-title ${task.completed ? 'text-decoration-line-through' : ''}`}>
+              <h5
+                className={`task-title ${
+                  task.completed ? "text-decoration-line-through" : ""
+                }`}
+              >
                 {task.title}
               </h5>
             </div>
@@ -217,26 +251,30 @@ class TaskItem extends React.Component {
               <button
                 className="btn btn-outline-primary btn-sm me-2"
                 onClick={this.handleEdit}
-                title="Chỉnh sửa"
+                title="Edit"
               >
                 <i className="fas fa-edit"></i>
               </button>
               <button
                 className="btn btn-outline-danger btn-sm"
                 onClick={this.handleDelete}
-                title="Xóa"
+                title="Delete"
               >
                 <i className="fas fa-trash"></i>
               </button>
             </div>
           </div>
-          
+
           {task.description && (
-            <p className={`task-description ${task.completed ? 'text-decoration-line-through' : ''}`}>
+            <p
+              className={`task-description ${
+                task.completed ? "text-decoration-line-through" : ""
+              }`}
+            >
               {task.description}
             </p>
           )}
-          
+
           <div className="task-meta">
             <span className={`badge ${this.getPriorityClass(task.priority)}`}>
               {this.getPriorityLabel(task.priority)}
@@ -258,4 +296,4 @@ class TaskItem extends React.Component {
   }
 }
 
-export default TaskItem; 
+export default TaskItem;

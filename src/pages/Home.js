@@ -1,16 +1,16 @@
-import React from 'react';
-import { getCurrentUser } from '../utils/storage';
-import TaskList from '../components/tasks/TaskList';
-import TaskForm from '../components/tasks/TaskForm';
-import TaskFilter from '../components/tasks/TaskFilter';
-import '../styles/Home.css';
+import React from "react";
+import { getCurrentUser } from "../utils/storage";
+import TaskList from "../components/tasks/TaskList";
+import TaskForm from "../components/tasks/TaskForm";
+import TaskFilter from "../components/tasks/TaskFilter";
+import "../styles/Home.css";
 
 class Home extends React.Component {
   state = {
     user: null,
     isLoggedIn: false,
     tasks: [],
-    filter: 'all'
+    filter: "all",
   };
 
   componentDidMount() {
@@ -19,26 +19,40 @@ class Home extends React.Component {
 
   loadUserData = () => {
     const user = getCurrentUser();
+
     if (user) {
-      this.setState({
-        user,
-        isLoggedIn: true
-      });
-      this.loadTasks();
+      this.setState(
+        {
+          user,
+          isLoggedIn: true,
+        },
+        () => {
+          this.loadTasks();
+        }
+      );
     } else {
       this.setState({
         user: null,
-        isLoggedIn: false
+        isLoggedIn: false,
       });
-      window.location.href = '/login';
+      window.location.href = "/login";
     }
   };
 
   loadTasks = () => {
     const { user } = this.state;
-    if (user) {
-      const tasks = JSON.parse(localStorage.getItem(`tasks_${user.id}`)) || [];
-      this.setState({ tasks });
+
+    if (user && user.id) {
+      try {
+        const userId = parseInt(user.id);
+        const tasks = JSON.parse(localStorage.getItem(`tasks_${userId}`)) || [];
+        this.setState({ tasks });
+      } catch (error) {
+        console.error("Error loading tasks:", error);
+        this.setState({ tasks: [] });
+      }
+    } else {
+      console.error("No user or user.id found");
     }
   };
 
@@ -52,19 +66,19 @@ class Home extends React.Component {
 
   getFilteredTasks = () => {
     const { tasks, filter } = this.state;
-    
+
     switch (filter) {
-      case 'active':
-        return tasks.filter(task => !task.completed);
-      case 'completed':
-        return tasks.filter(task => task.completed);
+      case "active":
+        return tasks.filter((task) => !task.completed);
+      case "completed":
+        return tasks.filter((task) => task.completed);
       default:
         return tasks;
     }
   };
 
   render() {
-    const { user, isLoggedIn, filter } = this.state;
+    const { user, isLoggedIn } = this.state;
     const filteredTasks = this.getFilteredTasks();
 
     if (!isLoggedIn) {
@@ -79,24 +93,21 @@ class Home extends React.Component {
               <div className="welcome-section">
                 <h1>
                   <i className="fas fa-tasks me-3"></i>
-                  Quản lý công việc
+                  Task Manager
                 </h1>
                 <p className="text-muted">
-                  Chào mừng trở lại, {user?.name}! Hãy quản lý công việc của bạn một cách hiệu quả.
+                  Welcome back, {user?.name}! Manage your tasks effectively.
                 </p>
               </div>
 
-              <TaskFilter 
+              <TaskFilter
                 tasks={this.state.tasks}
                 onFilterChange={this.handleFilterChange}
               />
 
               <TaskForm onRefresh={this.handleRefresh} />
 
-              <TaskList 
-                tasks={filteredTasks}
-                onRefresh={this.handleRefresh}
-              />
+              <TaskList tasks={filteredTasks} onRefresh={this.handleRefresh} />
             </div>
           </div>
         </div>
@@ -105,4 +116,4 @@ class Home extends React.Component {
   }
 }
 
-export default Home; 
+export default Home;

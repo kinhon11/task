@@ -21,17 +21,17 @@ class Login extends React.Component {
           <div className="card-header">
             <h2>
               <i className="fas fa-sign-in-alt me-2"></i>
-              Đăng nhập
+              Login
             </h2>
-            <p>Chào mừng bạn trở lại! Vui lòng đăng nhập để tiếp tục.</p>
+            <p>Welcome back! Please sign in to continue.</p>
           </div>
           
           <LoginForm onSubmit={this.handleSubmit} />
 
           <div className="login-links">
             <p>
-              Chưa có tài khoản?{' '}
-              <Link to="/register">Đăng ký ngay</Link>
+              Don't have an account?{' '}
+              <Link to="/register">Register now</Link>
             </p>
           </div>
         </div>

@@ -1,10 +1,10 @@
-import React from 'react';
-import TaskItem from './TaskItem';
-import '../../styles/tasks/TaskList.css';
+import React from "react";
+import TaskItem from "./TaskItem";
+import "../../styles/tasks/TaskList.css";
 
 class TaskList extends React.Component {
   state = {
-    tasks: this.props.tasks || []
+    tasks: this.props.tasks || [],
   };
 
   componentDidUpdate(prevProps) {
@@ -14,7 +14,6 @@ class TaskList extends React.Component {
   }
 
   handleTaskUpdate = () => {
-    // Refresh tasks from parent
     if (this.props.onRefresh) {
       this.props.onRefresh();
     }
@@ -23,7 +22,7 @@ class TaskList extends React.Component {
   render() {
     const { tasks } = this.state;
 
-    if (tasks.length === 0) {
+    if (!tasks || tasks.length === 0) {
       return (
         <div className="task-list-empty">
           <div className="empty-state">
@@ -49,4 +48,4 @@ class TaskList extends React.Component {
   }
 }
 
-export default TaskList; 
+export default TaskList;

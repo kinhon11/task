@@ -1,7 +1,7 @@
 import React from 'react';
-import FormField from '../common/FormField';
 import Button from '../common/Button';
 import Alert from '../common/Alert';
+import LoginFields from './LoginFields';
 
 class LoginForm extends React.Component {
   state = {
@@ -12,26 +12,15 @@ class LoginForm extends React.Component {
     isLoading: false
   };
 
-  handleChangeEmail = (event) => {
-    this.setState({
-      email: event.target.value,
-      error: '',
-      success: ''
-    });
-  };
-
-  handleChangePassword = (event) => {
-    this.setState({
-      password: event.target.value,
-      error: '',
-      success: ''
-    });
+  handleChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value, error: '', success: '' });
   };
 
   validate = () => {
     const { email, password } = this.state;
     if (!email.trim() || !password.trim()) {
-      return 'Vui lòng nhập đầy đủ thông tin!';
+      return 'Please fill in all required fields!';
     }
     return null;
   };
@@ -47,7 +36,6 @@ class LoginForm extends React.Component {
 
     this.setState({ isLoading: true, error: '', success: '' });
 
-    // Call parent's onSubmit handler
     this.props.onSubmit({
       email: this.state.email,
       password: this.state.password
@@ -73,7 +61,7 @@ class LoginForm extends React.Component {
   };
 
   render() {
-    const { email, password, error, success, isLoading } = this.state;
+    const { error, success, isLoading, ...values } = this.state;
 
     return (
       <div className="card-body">
@@ -81,34 +69,14 @@ class LoginForm extends React.Component {
         {success && <Alert type="success" message={success} />}
 
         <form className="login-form" onSubmit={this.handleSubmit}>
-          <FormField
-            label="Email"
-            icon="fas fa-envelope"
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={this.handleChangeEmail}
-            placeholder="Nhập email của bạn"
-          />
-
-          <FormField
-            label="Mật khẩu"
-            icon="fas fa-lock"
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={this.handleChangePassword}
-            placeholder="Nhập mật khẩu"
-          />
+          <LoginFields values={values} onChange={this.handleChange} />
 
           <Button
             type="submit"
             variant="primary"
             isLoading={isLoading}
-            label="Đăng nhập"
-            loadingLabel="Đang đăng nhập..."
+            label="Login"
+            loadingLabel="Signing in..."
             icon="fas fa-sign-in-alt"
           />
         </form>

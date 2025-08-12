@@ -1,20 +1,8 @@
 import React from 'react';
 
-function FormField({
-  label,
-  icon,
-  type = 'text',
-  id,
-  name,
-  value,
-  checked,
-  onChange,
-  placeholder,
-  options = [],
-  error,
-  required = true,
-}) {
-  if (type === 'select') {
+class FormField extends React.Component {
+  renderSelect() {
+    const { label, icon, id, name, value, onChange, options = [], error, required = true } = this.props;
     return (
       <div className="mb-3">
         <label htmlFor={id} className="form-label">
@@ -40,7 +28,8 @@ function FormField({
     );
   }
 
-  if (type === 'checkbox') {
+  renderCheckbox() {
+    const { label, id, name, checked, onChange, error, required = true } = this.props;
     return (
       <div className="mb-3">
         <div className="form-check">
@@ -62,25 +51,35 @@ function FormField({
     );
   }
 
-  return (
-    <div className="mb-3">
-      <label htmlFor={id} className="form-label">
-        {icon && <i className={`${icon} me-2`}></i>}
-        {label}
-      </label>
-      <input
-        type={type}
-        className={`form-control ${error ? 'is-invalid' : ''}`}
-        id={id}
-        name={name}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        required={required}
-      />
-      {error && <div className="invalid-feedback">{error}</div>}
-    </div>
-  );
+  renderInput() {
+    const { label, icon, type = 'text', id, name, value, onChange, placeholder, error, required = true } = this.props;
+    return (
+      <div className="mb-3">
+        <label htmlFor={id} className="form-label">
+          {icon && <i className={`${icon} me-2`}></i>}
+          {label}
+        </label>
+        <input
+          type={type}
+          className={`form-control ${error ? 'is-invalid' : ''}`}
+          id={id}
+          name={name}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          required={required}
+        />
+        {error && <div className="invalid-feedback">{error}</div>}
+      </div>
+    );
+  }
+
+  render() {
+    const { type } = this.props;
+    if (type === 'select') return this.renderSelect();
+    if (type === 'checkbox') return this.renderCheckbox();
+    return this.renderInput();
+  }
 }
 
 export default FormField;

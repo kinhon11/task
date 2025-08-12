@@ -1,13 +1,13 @@
-import React from 'react';
-import '../../styles/tasks/TaskForm.css';
+import React from "react";
+import "../../styles/tasks/TaskForm.css";
 
 class TaskForm extends React.Component {
   state = {
-    title: '',
-    description: '',
-    priority: 'medium',
-    dueDate: '',
-    isExpanded: false
+    title: "",
+    description: "",
+    priority: "medium",
+    dueDate: "",
+    isExpanded: false,
   };
 
   handleSubmit = (e) => {
@@ -22,44 +22,50 @@ class TaskForm extends React.Component {
         priority,
         dueDate,
         completed: false,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       this.addTaskToStorage(newTask);
       this.setState({
-        title: '',
-        description: '',
-        priority: 'medium',
-        dueDate: '',
-        isExpanded: false
+        title: "",
+        description: "",
+        priority: "medium",
+        dueDate: "",
+        isExpanded: false,
       });
     }
   };
 
   handleInputChange = (e) => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   toggleExpanded = () => {
-    this.setState(prevState => ({
-      isExpanded: !prevState.isExpanded
+    this.setState((prevState) => ({
+      isExpanded: !prevState.isExpanded,
     }));
   };
 
   addTaskToStorage = (newTask) => {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    
-    if (currentUser) {
-      const tasks = JSON.parse(localStorage.getItem(`tasks_${currentUser.id}`)) || [];
-      tasks.push(newTask);
-      localStorage.setItem(`tasks_${currentUser.id}`, JSON.stringify(tasks));
-      
-      // Notify parent to refresh
-      if (this.props.onRefresh) {
-        this.props.onRefresh();
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (currentUser && currentUser.id) {
+      try {
+        const userId = parseInt(currentUser.id);
+        const tasks = JSON.parse(localStorage.getItem(`tasks_${userId}`)) || [];
+        tasks.push(newTask);
+        localStorage.setItem(`tasks_${userId}`, JSON.stringify(tasks));
+
+        if (this.props.onRefresh) {
+          this.props.onRefresh();
+        }
+      } catch (error) {
+        console.error("Error adding task to storage:", error);
       }
+    } else {
+      console.error("No current user found");
     }
   };
 
@@ -76,7 +82,7 @@ class TaskForm extends React.Component {
               name="title"
               value={title}
               onChange={this.handleInputChange}
-              placeholder="Thêm công việc mới..."
+              placeholder="Add a new task..."
               required
             />
             <button
@@ -84,7 +90,7 @@ class TaskForm extends React.Component {
               className="btn btn-outline-secondary btn-sm"
               onClick={this.toggleExpanded}
             >
-              <i className={`fas fa-chevron-${isExpanded ? 'up' : 'down'}`}></i>
+              <i className={`fas fa-chevron-${isExpanded ? "up" : "down"}`}></i>
             </button>
           </div>
 
@@ -93,14 +99,14 @@ class TaskForm extends React.Component {
               <div className="mb-3">
                 <label className="form-label">
                   <i className="fas fa-align-left me-2"></i>
-                  Mô tả
+                  Description
                 </label>
                 <textarea
                   className="form-control"
                   name="description"
                   value={description}
                   onChange={this.handleInputChange}
-                  placeholder="Mô tả chi tiết công việc..."
+                  placeholder="Task description..."
                   rows="3"
                 />
               </div>
@@ -110,7 +116,7 @@ class TaskForm extends React.Component {
                   <div className="mb-3">
                     <label className="form-label">
                       <i className="fas fa-flag me-2"></i>
-                      Độ ưu tiên
+                      Priority
                     </label>
                     <select
                       className="form-control"
@@ -118,9 +124,9 @@ class TaskForm extends React.Component {
                       value={priority}
                       onChange={this.handleInputChange}
                     >
-                      <option value="low">Thấp</option>
-                      <option value="medium">Trung bình</option>
-                      <option value="high">Cao</option>
+                      <option value="low">Low</option>
+                      <option value="medium">Medium</option>
+                      <option value="high">High</option>
                     </select>
                   </div>
                 </div>
@@ -128,7 +134,7 @@ class TaskForm extends React.Component {
                   <div className="mb-3">
                     <label className="form-label">
                       <i className="fas fa-calendar me-2"></i>
-                      Hạn hoàn thành
+                      Due date
                     </label>
                     <input
                       type="date"
@@ -150,7 +156,7 @@ class TaskForm extends React.Component {
               disabled={!title.trim()}
             >
               <i className="fas fa-plus me-2"></i>
-              Thêm công việc
+              Add task
             </button>
           </div>
         </form>
@@ -159,4 +165,4 @@ class TaskForm extends React.Component {
   }
 }
 
-export default TaskForm; 
+export default TaskForm;

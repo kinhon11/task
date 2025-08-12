@@ -1,15 +1,15 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { getCurrentUser, removeCurrentUser } from '../utils/storage';
+import React from "react";
+import { Link } from "react-router-dom";
+import { getCurrentUser, removeCurrentUser } from "../utils/storage";
 
 class Navbar extends React.Component {
   state = {
-    isLoggedIn: false
+    isLoggedIn: false,
   };
 
   componentDidMount() {
     this.checkLoginStatus();
-    // Check login status every 2 seconds
+
     this.interval = setInterval(this.checkLoginStatus, 2000);
   }
 
@@ -25,13 +25,13 @@ class Navbar extends React.Component {
     if (this.state.isLoggedIn !== isLoggedIn) {
       this.setState({ isLoggedIn });
     }
-  }
+  };
 
   handleLogout = () => {
     removeCurrentUser();
     this.setState({ isLoggedIn: false });
-    window.location.href = '/';
-  }
+    window.location.href = "/";
+  };
 
   render() {
     const { isLoggedIn } = this.state;
@@ -43,39 +43,39 @@ class Navbar extends React.Component {
             <i className="fas fa-tasks me-2"></i>
             Personal Task Manager
           </Link>
-          
-          <button 
-            className="navbar-toggler" 
-            type="button" 
-            data-bs-toggle="collapse" 
+
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
             data-bs-target="#navbarNav"
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-          
+
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav me-auto">
               <li className="nav-item">
                 <Link className="nav-link" to="/">
                   <i className="fas fa-home me-1"></i>
-                  Trang chủ
+                  Home
                 </Link>
               </li>
             </ul>
-            
+
             <ul className="navbar-nav">
               {!isLoggedIn ? (
                 <>
                   <li className="nav-item">
                     <Link className="nav-link" to="/login">
                       <i className="fas fa-sign-in-alt me-1"></i>
-                      Đăng nhập
+                      Login
                     </Link>
                   </li>
                   <li className="nav-item">
                     <Link className="nav-link" to="/register">
                       <i className="fas fa-user-plus me-1"></i>
-                      Đăng ký
+                      Register
                     </Link>
                   </li>
                 </>
@@ -84,17 +84,17 @@ class Navbar extends React.Component {
                   <li className="nav-item">
                     <Link className="nav-link" to="/profile">
                       <i className="fas fa-user me-1"></i>
-                      Hồ sơ
+                      Profile
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <button 
-                      className="nav-link btn btn-link" 
+                    <button
+                      className="nav-link btn btn-link"
                       onClick={this.handleLogout}
-                      style={{ border: 'none', background: 'none' }}
+                      style={{ border: "none", background: "none" }}
                     >
                       <i className="fas fa-sign-out-alt me-1"></i>
-                      Đăng xuất
+                      Logout
                     </button>
                   </li>
                 </>
@@ -107,4 +107,4 @@ class Navbar extends React.Component {
   }
 }
 
-export default Navbar; 
+export default Navbar;
