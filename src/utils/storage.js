@@ -35,7 +35,6 @@ export const checkUserExists = (email) => {
   return findUserByEmail(email) !== undefined;
 };
 
-// Task management
 export const saveTasks = (userId, tasks) => {
   localStorage.setItem(`tasks_${userId}`, JSON.stringify(tasks));
 };
@@ -84,11 +83,9 @@ export const toggleTaskStatus = (userId, taskId) => {
   return updatedTasks;
 };
 
-// Filter and search tasks
 export const filterTasks = (tasks, filterStatus, searchTerm) => {
   let filtered = tasks;
 
-  // Filter by status
   if (filterStatus !== "all") {
     filtered = filtered.filter((task) => {
       if (filterStatus === "completed") return task.completed;
@@ -97,7 +94,6 @@ export const filterTasks = (tasks, filterStatus, searchTerm) => {
     });
   }
 
-  // Filter by search term
   if (searchTerm) {
     filtered = filtered.filter(
       (task) =>
@@ -109,7 +105,6 @@ export const filterTasks = (tasks, filterStatus, searchTerm) => {
   return filtered;
 };
 
-// Clear all data (for testing)
 export const clearAllData = () => {
   localStorage.clear();
 };
